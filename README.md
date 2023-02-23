@@ -1,3 +1,10 @@
-# ios102-lab5-spring23
+# Instaparse (Part 1)
+## Lab 5
 
-![instaparse_walkthrough_1_xtra_small](https://user-images.githubusercontent.com/11927517/199710313-700aef85-ba89-427c-aa07-f89f0fdfdbbe.gif)
+<img src="demo1.gif" width=250><br>
+
+#### Required Features
+- [x] Users can sign up to create a new account.
+- [x] Users can log in after creating an account.
+- [x] Users can create a Post by choosing an existing photo from their photos library and uploading it with a caption to the server. (NOTE: We will modify this to use the camera in the next unit.)
+- [x] Users can view posts they've created in their feed
