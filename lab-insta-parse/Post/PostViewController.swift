@@ -8,6 +8,7 @@
 import UIKit
 
 // TODO: Import Photos UI
+import PhotosUI
 
 // TODO: Import Parse Swift
 
@@ -26,6 +27,24 @@ class PostViewController: UIViewController {
 
     @IBAction func onPickedImageTapped(_ sender: UIBarButtonItem) {
         // TODO: Pt 1 - Present Image picker
+        
+        /// Create a vonfiguration object
+        var config = PHPickerConfiguration()
+        
+        /// Set the filter to only show images as options (no videos, etc.)
+        config.preferredAssetRepresentationMode = .current
+        
+        /// Only allow 1 image to be selected at a time
+        config.selectionLimit = 1
+        
+        /// Instantiate a picker, passing in the configuration
+        let picker = PHPickerViewController(configuration: config)
+        
+        /// Set the picker delegate so we can receive whatever image the user picks
+        picker.delegate = self
+        
+        /// Present the picker
+        present(picker, animated: true)
 
     }
 
@@ -54,3 +73,48 @@ class PostViewController: UIViewController {
 
 // TODO: Pt 1 - Add PHPickerViewController delegate and handle picked image.
 
+extension PostViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        /// Dismiss the picker
+        picker.dismiss(animated: true)
+        
+        /// Make sure we have a non-nil item provider
+        guard let provider = results.first?.itemProvider,
+            /// Make sure the provider can load a UIImage
+                provider.canLoadObject(ofClass: UIImage.self) else { return }
+        
+        /// Load a UIImage from the provider
+        provider.loadObject(ofClass: UIImage.self) { [weak self] object, error in
+            
+            /// Make sure we can cast eht returned object to a UIImage
+            guard let image = object as? UIImage else {
+                
+                /// ❌ Unable to cast to UIImage
+                self?.showAlert()
+                return
+            }
+            
+            
+            /// Check for and handle any errors
+            if let error = error {
+                // self?.showAlert(for: error) /// Produces error
+                self?.showAlert(description: "\(error)")
+                return
+            }
+            else {
+                /// UI updates (like setting image on image view) should be done on main thread
+                DispatchQueue.main.async {
+                    
+                    /// Set image on preview image view
+                    self?.previewImageView.image = image
+                    
+                    /// Set image to use when saving post
+                    self?.pickedImage = image
+                }
+            }
+        }
+    }
+    
+    
+}
