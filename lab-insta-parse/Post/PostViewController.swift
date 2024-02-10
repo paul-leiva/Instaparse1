@@ -32,7 +32,10 @@ class PostViewController: UIViewController {
         /// Create a vonfiguration object
         var config = PHPickerConfiguration()
         
-        /// Set the filter to only show images as options (no videos, etc.)
+        /// Set the filter to only show images as options (i.e. no videos, etc.)
+        config.filter = .images
+        
+        /// Request th eoriginal file format. Fastest method as it avoids transcoding.
         config.preferredAssetRepresentationMode = .current
         
         /// Only allow 1 image to be selected at a time
@@ -124,7 +127,7 @@ extension PostViewController: PHPickerViewControllerDelegate {
         /// Load a UIImage from the provider
         provider.loadObject(ofClass: UIImage.self) { [weak self] object, error in
             
-            /// Make sure we can cast eht returned object to a UIImage
+            /// Make sure we can cast the returned object to a UIImage
             guard let image = object as? UIImage else {
                 
                 /// ❌ Unable to cast to UIImage
@@ -152,6 +155,4 @@ extension PostViewController: PHPickerViewControllerDelegate {
             }
         }
     }
-    
-    
 }
